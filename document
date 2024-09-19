@@ -1,0 +1,5 @@
+my questions for Mr Ife
+
+when connecting your env file with your server using;
+mongoose.connect(process.env.whatever name of the variable you saved it with), can you use the same connect for many variables. for example, 
+mongoose.connect(process.env.DBpassword, process.env.email_password)
