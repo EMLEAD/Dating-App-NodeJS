@@ -122,7 +122,26 @@ const {DateOfBirth,Gender,Interests}= req.body
         res.status(500).json(error.message)
     }
 }
+const UpdateUserIdentity = async(req,res)=>{
+  
+try {
+  const {PhoneNo,Email}= req.params
+  const updatedUser = await User.findOneAndUpdate(
+    { Email: Email }, // Find by email (not just _id)
+    { PhoneNo: PhoneNo},         // Update fullName field
+    { new: true},
+    { runValidators: true } // Return updated document, run validation
+  );
+if( updatedUser){
+  res.status(200).json("User Identity Updated Successfully")
+}
+else{
+  res.status(400).json(' User Identity Cannot Be Updated.')
+}
 
+} catch (error) {
+  
+}
 
-
-module.exports = {CreateUserController,UserLogin,searchAllUsers,searchOneUsers,deleteMyAccount,}
+}
+module.exports = {CreateUserController,UserLogin,searchAllUsers,searchOneUsers,deleteMyAccount,UpdateUserIdentity}
