@@ -22,7 +22,7 @@ const UserSchema = mongoose.Schema({
     Username:{
         type:String,
         required:[true, 'Username is required'],
-        minLength:[6, 'Username wil be displayed to other users, therefore, must be your Known name'],
+        minLength:[5, 'Username wil be displayed to other users, therefore, must be your Known name'],
         unique:true
     },
     DateOfBirth:{
@@ -45,8 +45,12 @@ const UserSchema = mongoose.Schema({
         ],
         // default:[],
         required:[true, ' You Must Select At Least Three Of The Following Interests.']
-    }]
-})
+    }]},
+
+    {
+        timestamps:true
+    }
+)
 
 const User = mongoose.model('user',UserSchema)
 

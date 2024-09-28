@@ -64,14 +64,18 @@ const CreateUserController = expressHandler(async(req,res)=>{
 //User Login Controller
  const UserLogin = async(req, res) =>{
   const {Email, Password} = req.body;
-  if(!Email || !Password){
-    res.status(400).json('Both fields are required')
-  }
-  const userExist = await User.findOne({Email});
-  if(userExist){
-    res.status(200).json(userExist)
-  }else{
-    res.status(400).json('User not found')
+  try {
+    if(!Email || !Password){
+      res.status(400).json('Both fields are required')
+    }
+    const userExist = await User.findOne({Email});
+    if(userExist){
+      res.status(200).json(userExist)
+    }else{
+      res.status(400).json('User not found')
+    }
+  } catch (error) {
+    res.status(400).json(error.message) 
   }
  }
 
@@ -79,22 +83,46 @@ const CreateUserController = expressHandler(async(req,res)=>{
  const searchAllUsers = async(req,res)=>{
 const {DateOfBirth,Gender,Interests}= req.body
  const userExist = await User.find({DateOfBirth,Gender,Interests});
- if(userExist && DateOfBirth >18 && DateOfBirth<65 && Gender === 'Male'||Gender === 'Female'|| Interests===Interests ){
-     res.status(200). json(userExist)
- }else{
-   res.status(400).json("No User Found")
+ try {
+  if(userExist && DateOfBirth >18 && DateOfBirth<65 && (Gender = 'Male'|| Gender == 'Female') && Interests===Interests ){
+      res.status(200). json(userExist)
+  }else{
+    res.status(400).json("No User Found")
+  }
+ } catch (error) {
+  res.status(400).json(error.message)
  }
  }
 
+
+ // searching for Only one user Controller
  const searchOneUsers = async(req,res)=>{
   const {Username}= req.body
    const userExist = await User.findOne({Username});
-   if(userExist&&(Username===Username)){
-       res.status(200). json(userExist)
-   }else{
-     res.status(400).json("No User Found")
+   try {
+    if(userExist&&(Username===Username)){
+        res.status(200). json(userExist)
+    }else{
+      res.status(400).json("No User Found")
+    }
+   } catch (error) {
+    res.status(400).json(error.message)
    }
    }
 
+   const deleteMyAccount = async(req,res) =>{
+    const {id} =req.params
+    try {
+       const deletedAccount = await User.findByIdAndDelete(id)
+      if(deletedAccount){
+        res.status(200).json('Account Deleted Successfully')
+      }
 
-module.exports = {CreateUserController,UserLogin,searchAllUsers,searchOneUsers}
+    } catch (error) {
+        res.status(500).json(error.message)
+    }
+}
+
+
+
+module.exports = {CreateUserController,UserLogin,searchAllUsers,searchOneUsers,deleteMyAccount,}
