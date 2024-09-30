@@ -122,26 +122,27 @@ const {DateOfBirth,Gender,Interests}= req.body
         res.status(500).json(error.message)
     }
 }
-const UpdateUserIdentity = async(req,res)=>{
-  
-try {
-  const {PhoneNo,Email}= req.params
-  const updatedUser = await User.findOneAndUpdate(
-    { Email: Email }, // Find by email (not just _id)
-    { PhoneNo: PhoneNo},         // Update fullName field
-    { new: true},
-    { runValidators: true } // Return updated document, run validation
-  );
-if( updatedUser){
-  res.status(200).json("User Identity Updated Successfully")
-}
-else{
-  res.status(400).json(' User Identity Cannot Be Updated.')
-}
+const UpdateUserIdentity = async (req, res) => {
+  try {
+    const { Interests,Password } = req.body; // The current Interests and password (to search for)
+    const { newInterests, newPassword} = req.body; // The new Interests and password to update to
 
-} catch (error) {
-  
-}
+    // Find the user by the current Interests and Password and update it to the newInterests and new password
+    const updatedUser = await User.findOneAndUpdate(
+      { Interests: Interests, Password:Password },   // Find user by current Interests and password
+      { Interests: newInterests,Password:newPassword },// Update the Interests to newInterests and password to newpassword
+      { new: true, runValidators: true } // Return the updated document, and run validation
+    );
 
-}
+    if (updatedUser) {
+      res.status(200).json("User Identity Updated Successfully");
+    } else {
+      res.status(400).json("User not found!");
+    }
+  } catch (error) {
+    console.log(error.message); // Log the error for debugging purposes
+    res.status(400).json("User Identity Cannot Be Updated.");
+  }
+};
+
 module.exports = {CreateUserController,UserLogin,searchAllUsers,searchOneUsers,deleteMyAccount,UpdateUserIdentity}
